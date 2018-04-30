@@ -32,7 +32,11 @@ int main(int argc, char * argv[])
 	SDL_GetCurrentDisplayMode(NULL, &Current);
 	cout << Current.w << endl;
 	cout << Current.h << endl;
-	Game g(3, Current.w, Current.h);
+	int startLenght = 3;
+	Game g(startLenght, Current.w, Current.h);
+
+	int score = 0;
+	score = g.snakes[0].snakelenght() - startLenght;
 
 	unsigned long long currentTime = 0;
 	unsigned long long lastMoveTime = 0;
@@ -44,7 +48,7 @@ int main(int argc, char * argv[])
 	Apple apl;
 	apl.CreateApple(1, 10, 10);
 
-	thread RenderingThread(&Game::RenderFramesAsync, g, &g.snakes[0], &apl);
+	thread RenderingThread(&Game::RenderFramesAsync, g, &g.snakes[0], &apl, &score);
 	RenderingThread.detach();
 
 	SDL_Delay(500);
@@ -81,6 +85,7 @@ int main(int argc, char * argv[])
 						apl.CreateApple(1, randomNumber(10, 30), randomNumber(5, 20));
 				}
 			}
+			score = g.snakes[0].snakelenght() - startLenght;
 		}
 	}
 	keeprendering = false;

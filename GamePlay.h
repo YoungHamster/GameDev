@@ -13,8 +13,6 @@ class Game
 {
 private:
 	GameRenderer GR;
-	int score = 0;
-	int startLenght;
 public:
 	//bool gameplayrunning = true;
 	PhysicalObject borders[4]; // map borders
@@ -22,7 +20,6 @@ public:
 	//std::vector<AABB> objects;
 	Game(int lenght, int winW, int winH)
 	{
-		startLenght = lenght;
 		gameplayrunning = GR.InitGameRenderer(winW, winH);
 		Snake snake;
 		snake.InitSnake(lenght);
@@ -54,11 +51,6 @@ public:
 		borders[3].borders.max.y = 1;
 	}
 
-	void updateScore()
-	{
-		//score = snakes[0].snakelenght - 1 - startLenght;
-	}
-
 	// Check collisions between snake's head and borders, snake's body
 	/*pointer on snake for synchronization between threads*/
 	void CheckAllCollisions(Snake* snake)
@@ -76,9 +68,9 @@ public:
 	}
 
 	// Renders GUI
-	void RenderGUI()
+	void RenderGUI(int score, int lenght)
 	{
-		//GR.RenderCustomTexture()
+		GR.RenderGUI(score, lenght);
 	}
 
 	// Renders one frame
@@ -104,25 +96,25 @@ public:
 			GR.RenderObject(snakes[0].getPhysicalObject(i));
 		}
 		GR.RenderPresent();
-		RenderGUI();
+		//RenderGUI();
 	}
 
 	/*should be used in another thread!!!*/
 	/*renders frames*/
 	/*pointer on snake for synchronization between threads*/
-	void RenderFramesAsync(Snake* snake, Apple* apple)
+	void RenderFramesAsync(Snake* snake, Apple* apple, int* score)
 	{
 		while (gameplayrunning)
 		{
 			if (keeprendering) {
-				RenderFrameAsync(snake, &apple->ReturnPhysicalObject());
+				RenderFrameAsync(snake, &apple->ReturnPhysicalObject(), *score);
 			}
 		}
 	}
 
 	// Renders 1 frame
 	/*pointer on snake for synchronization between threads*/
-	void RenderFrameAsync(Snake* snake, PhysicalObject* apple)
+	void RenderFrameAsync(Snake* snake, PhysicalObject* apple, int score)
 	{
 		GR.RenderCLear();
 		GR.RenderBackground();
@@ -143,6 +135,7 @@ public:
 		{
 			GR.RenderObject(snake->getPhysicalObject(i));
 		}
+		GR.RenderGUI(score, snake->snakelenght());
 		GR.RenderPresent();
 	}
 

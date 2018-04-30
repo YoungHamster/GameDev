@@ -24,6 +24,19 @@
 #define APPLE_TEXTURE 3
 #define TEXTS_TEXTURE 4
 
+int ReturnDischargeOfNumber(int number, int discharge)
+{
+	if (discharge > number)
+		return 0;
+	if (number == discharge)
+		return 1;
+	if (number < discharge * 10)
+		return number - number % discharge;
+	else
+		return number - number % discharge - (number - number % (discharge * 10));
+	return -2;
+}
+
 class GameRenderer
 {
 private:
@@ -76,7 +89,7 @@ public:
 		srcRects[9].x = 0;
 		srcRects[9].y = 0;
 		srcRects[9].w = 62;
-		srcRects[9].h = 7;
+		srcRects[9].h = 8;
 
 		srcRects[10].x = 0;
 		srcRects[10].y = 9;
@@ -92,8 +105,8 @@ public:
 		{
 			srcRects[12 + i].x = i * 5 + 4;
 			srcRects[12 + i].y = 19;
-			srcRects[12 + i].w = 5;
-			srcRects[12 + i].h = 7;
+			srcRects[12 + i].w = 6;
+			srcRects[12 + i].h = 9;
 		}
 
 		std::string filename = "Background.png";
@@ -174,11 +187,63 @@ public:
 	void RenderGUI(int score, int snakeLenght)
 	{
 		SDL_Rect rect;
-		rect.x = winW - pixOnBlock * 5;
-		rect.y = winH - pixOnBlock * 1.5;
-		rect.w = 62;
-		rect.h = 7;
+		int counter = 3;
+		rect.x = winW - pixOnBlock * 15;
+		rect.y = pixOnBlock * 2;
+		rect.w = 62 * counter;
+		rect.h = 8 * counter;
 		SDL_RenderCopy(renderer, textures[TEXTS_TEXTURE], &srcRects[SCORE_RECT], &rect);
+
+		rect.x = rect.x + rect.w;
+
+		if (score < 10) {
+			if (score == 1)
+				rect.w = 5 * counter;
+			else
+				rect.w = 6 * counter;
+			rect.x = rect.x + 3 * counter;
+			SDL_RenderCopy(renderer, textures[TEXTS_TEXTURE], &srcRects[10 + score], &rect);
+		}
+		else {
+			if (score < 100) {
+				if (ReturnDischargeOfNumber(score, 10) == 100)
+					rect.w = 5 * counter;
+				else
+					rect.w = 6 * counter;
+				rect.x = rect.x + rect.w + 3 * counter;
+				SDL_RenderCopy(renderer, textures[TEXTS_TEXTURE], &srcRects[10 + ReturnDischargeOfNumber(score, 10) / 10], &rect);
+				if (ReturnDischargeOfNumber(score, 1) == 1)
+					rect.w = 5 * counter;
+				else
+					rect.w = 6 * counter;
+				rect.x = rect.x + rect.w + 3 * counter;
+				SDL_RenderCopy(renderer, textures[TEXTS_TEXTURE], &srcRects[10 + ReturnDischargeOfNumber(score, 1)], &rect);
+			}
+			else {
+				if (score < 1000) {
+					if (ReturnDischargeOfNumber(score, 100) == 100)
+						rect.w = 5 * counter;
+					else
+						rect.w = 6 * counter;
+					rect.x = rect.x + rect.w + 3 * counter;
+					SDL_RenderCopy(renderer, textures[TEXTS_TEXTURE], &srcRects[10 + ReturnDischargeOfNumber(score, 100) / 100], &rect);
+					if (ReturnDischargeOfNumber(score, 10) == 10)
+						rect.w = 4 * counter;
+					else
+						rect.w = 5 * counter;
+					rect.x = rect.x + rect.w + 3 * counter;
+					SDL_RenderCopy(renderer, textures[TEXTS_TEXTURE], &srcRects[10 + ReturnDischargeOfNumber(score, 10) / 10], &rect);
+					if (ReturnDischargeOfNumber(score, 1) == 1)
+						rect.w = 5 * counter;
+					else
+						rect.w = 6 * counter;
+					rect.x = rect.x + rect.w + 3 * counter;
+					SDL_RenderCopy(renderer, textures[TEXTS_TEXTURE], &srcRects[10 + ReturnDischargeOfNumber(score, 1) / 1], &rect);
+				}
+				else
+					std::cout << "Error! Wrong score!" << std::endl;
+			}
+		}
 
 		rect.x = winW - 13 - pixOnBlock * 5;
 		rect.y = rect.y - pixOnBlock * 1.1;
