@@ -42,7 +42,7 @@ int main(int argc, char * argv[])
 	unsigned long long lastMoveTime = 0;
 	unsigned long long delta = 0;
 	int lastDir = LEFT;
-	int Direction;
+	int Direction = LEFT;
 	bool CheckingCollisions = false;
 	SDL_Event event;
 	Apple apl;
@@ -89,7 +89,7 @@ int main(int argc, char * argv[])
 		}
 	}
 	keeprendering = false;
-	SDL_Delay(5000);
+	SDL_Delay(500);
 	g.DeleteWindowAndQuitGame();
 	cout << "YOU LOSE(or it was bug)" << endl;
 	cin.get();

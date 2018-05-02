@@ -29,7 +29,7 @@ int ReturnDischargeOfNumber(int number, int discharge)
 	if (discharge > number)
 		return 0;
 	if (number == discharge)
-		return 1;
+		return number;
 	if (number < discharge * 10)
 		return number - number % discharge;
 	else
@@ -56,7 +56,7 @@ public:
 		winH = windowH;
 		pixOnBlock = winW / 48.0;
 
-		window = SDL_CreateWindow("SnakeGame", 0, 0, winW, winH, SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN);
+		window = SDL_CreateWindow("SnakeGame", 0, 0, winW, winH, SDL_WINDOW_SHOWN);
 		if (window == NULL)
 			return false;
 
@@ -86,28 +86,73 @@ public:
 			srcRects[i+5].h = 30;
 		}
 
+
+		// YOUR SCORE
 		srcRects[9].x = 0;
 		srcRects[9].y = 0;
 		srcRects[9].w = 62;
 		srcRects[9].h = 8;
 
-		srcRects[10].x = 0;
-		srcRects[10].y = 9;
-		srcRects[10].w = 75;
-		srcRects[10].h = 16;
+		// 0
+		srcRects[10].x = 56;
+		srcRects[10].y = 19;
+		srcRects[10].w = 6;
+		srcRects[10].h = 8;
 
-		srcRects[11].x = 0;
+		// 1
+		srcRects[11].x = 1;
 		srcRects[11].y = 19;
-		srcRects[11].w = 4;
-		srcRects[11].h = 26;
+		srcRects[11].w = 3;
+		srcRects[11].h = 8;
 
-		for (int i = 0; i < 9; i++)
-		{
-			srcRects[12 + i].x = i * 5 + 4;
-			srcRects[12 + i].y = 19;
-			srcRects[12 + i].w = 6;
-			srcRects[12 + i].h = 9;
-		}
+		// 2
+		srcRects[12].x = 5;
+		srcRects[12].y = 19;
+		srcRects[12].w = 5;
+		srcRects[12].h = 8;
+
+		// 3
+		srcRects[13].x = 11;
+		srcRects[13].y = 19;
+		srcRects[13].w = 5;
+		srcRects[13].h = 8;
+
+		// 4
+		srcRects[14].x = 17;
+		srcRects[14].y = 19;
+		srcRects[14].w = 6;
+		srcRects[14].h = 8;
+
+		// 5
+		srcRects[15].x = 24;
+		srcRects[15].y = 19;
+		srcRects[15].w = 6;
+		srcRects[15].h = 8;
+
+		// 6
+		srcRects[16].x = 31;
+		srcRects[16].y = 19;
+		srcRects[16].w = 5;
+		srcRects[16].h = 8;
+
+		// 7
+		srcRects[17].x = 37;
+		srcRects[17].y = 19;
+		srcRects[17].w = 5;
+		srcRects[17].h = 8;
+
+		// 8
+		srcRects[18].x = 43;
+		srcRects[18].y = 19;
+		srcRects[18].w = 6;
+		srcRects[18].h = 8;
+
+		// 9
+		srcRects[19].x = 50;
+		srcRects[19].y = 19;
+		srcRects[19].w = 5;
+		srcRects[19].h = 8;
+		
 
 		std::string filename = "Background.png";
 		textures[BACKGROUND_TEXTURE] = IMG_LoadTexture(renderer, filename.c_str());
@@ -198,7 +243,7 @@ public:
 
 		if (score < 10) {
 			if (score == 1)
-				rect.w = 5 * counter;
+				rect.w = 3 * counter;
 			else
 				rect.w = 6 * counter;
 			rect.x = rect.x + 3 * counter;
@@ -206,14 +251,14 @@ public:
 		}
 		else {
 			if (score < 100) {
-				if (ReturnDischargeOfNumber(score, 10) == 100)
-					rect.w = 5 * counter;
+				if (ReturnDischargeOfNumber(score, 10) == 10)
+					rect.w = 3 * counter;
 				else
 					rect.w = 6 * counter;
 				rect.x = rect.x + rect.w + 3 * counter;
 				SDL_RenderCopy(renderer, textures[TEXTS_TEXTURE], &srcRects[10 + ReturnDischargeOfNumber(score, 10) / 10], &rect);
 				if (ReturnDischargeOfNumber(score, 1) == 1)
-					rect.w = 5 * counter;
+					rect.w = 3 * counter;
 				else
 					rect.w = 6 * counter;
 				rect.x = rect.x + rect.w + 3 * counter;
@@ -222,22 +267,22 @@ public:
 			else {
 				if (score < 1000) {
 					if (ReturnDischargeOfNumber(score, 100) == 100)
-						rect.w = 5 * counter;
+						rect.w = 3 * counter;
 					else
 						rect.w = 6 * counter;
-					rect.x = rect.x + rect.w + 3 * counter;
+					rect.x = rect.x + rect.w;
 					SDL_RenderCopy(renderer, textures[TEXTS_TEXTURE], &srcRects[10 + ReturnDischargeOfNumber(score, 100) / 100], &rect);
 					if (ReturnDischargeOfNumber(score, 10) == 10)
-						rect.w = 4 * counter;
-					else
-						rect.w = 5 * counter;
-					rect.x = rect.x + rect.w + 3 * counter;
-					SDL_RenderCopy(renderer, textures[TEXTS_TEXTURE], &srcRects[10 + ReturnDischargeOfNumber(score, 10) / 10], &rect);
-					if (ReturnDischargeOfNumber(score, 1) == 1)
-						rect.w = 5 * counter;
+						rect.w = 3 * counter;
 					else
 						rect.w = 6 * counter;
-					rect.x = rect.x + rect.w + 3 * counter;
+					rect.x = rect.x + rect.w;
+					SDL_RenderCopy(renderer, textures[TEXTS_TEXTURE], &srcRects[10 + ReturnDischargeOfNumber(score, 10) / 10], &rect);
+					if (ReturnDischargeOfNumber(score, 1) == 1)
+						rect.w = 3 * counter;
+					else
+						rect.w = 6 * counter;
+					rect.x = rect.x + rect.w;
 					SDL_RenderCopy(renderer, textures[TEXTS_TEXTURE], &srcRects[10 + ReturnDischargeOfNumber(score, 1) / 1], &rect);
 				}
 				else
