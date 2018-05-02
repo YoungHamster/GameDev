@@ -104,10 +104,21 @@ public:
 	/*pointer on snake for synchronization between threads*/
 	void RenderFramesAsync(Snake* snake, Apple* apple, int* score)
 	{
+		unsigned long long currentTime = 0;
+		unsigned long long lastFrameTime = 0;
+		unsigned long long delta = 0;
 		while (gameplayrunning)
 		{
 			if (keeprendering) {
-				RenderFrameAsync(snake, &apple->ReturnPhysicalObject(), *score);
+				currentTime = clock();
+				delta = currentTime - lastFrameTime;
+				
+				// framerate == 60
+				if (delta >= 16)
+				{
+					lastFrameTime = clock();
+					RenderFrameAsync(snake, &apple->ReturnPhysicalObject(), *score);
+				}
 			}
 		}
 	}
