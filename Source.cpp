@@ -30,6 +30,12 @@ int main(int argc, char * argv[])
 
 	SDL_DisplayMode Current;
 	SDL_GetCurrentDisplayMode(NULL, &Current);
+
+	if (Current.w == 0 || Current.h == 0)
+	{
+		return -1;
+	}
+
 	cout << Current.w << endl;
 	cout << Current.h << endl;
 	int startLenght = 3;

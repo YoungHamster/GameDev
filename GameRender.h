@@ -56,7 +56,7 @@ public:
 		winH = windowH;
 		pixOnBlock = winW / 48.0;
 
-		window = SDL_CreateWindow("SnakeGame", 0, 0, winW, winH, SDL_WINDOW_SHOWN);
+		window = SDL_CreateWindow("SnakeGame", 0, 0, winW, winH, SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN);
 		if (window == NULL)
 			return false;
 
