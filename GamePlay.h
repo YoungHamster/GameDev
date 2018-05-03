@@ -8,6 +8,7 @@
 
 // synchronization between threads
 bool volatile gameplayrunning = true;
+bool volatile mainmenu = false;
 
 class Game
 {

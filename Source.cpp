@@ -7,16 +7,17 @@
 
 using namespace std;
 
+/* Define code for stopping game*/
 #define STOPGAME 123
 
-const int SCREEN_WIDTH = 1366;
-const int SCREEN_HEIGHT = 768;
-
-SDL_Window *window = NULL;
-SDL_Renderer *renderer = NULL;
-
+/* Prototypes of runctions*/
+// Generates random number
 int randomNumber(int min, int max);
+
+// Reads keyboard input and return it for following handling
 int ReadInput();
+
+// Moves snake
 void move(Snake* snake, int* lastDir, int Dir);
 
  
@@ -36,24 +37,34 @@ int main(int argc, char * argv[])
 		return -1;
 	}
 
+	// Screen width for renderer
 	cout << Current.w << endl;
+
+	// Screen height for renderer
 	cout << Current.h << endl;
+
+	// Snake lenght, when game starts
 	int startLenght = 3;
+
 	Game g(startLenght, Current.w, Current.h);
 
-	int score = 0;
-	score = g.snakes[0].snakelenght() - startLenght;
+	int score = 99;
+	//score = g.snakes[0].snakelenght() - startLenght;
 
+	// Timer for reading input and moving snake
 	unsigned long long currentTime = 0;
 	unsigned long long lastMoveTime = 0;
 	unsigned long long delta = 0;
+
+	// Variables for input handling and moving snake
 	int lastDir = LEFT;
 	int Direction = LEFT;
-	bool CheckingCollisions = false;
-	SDL_Event event;
-	Apple apl;
-	apl.CreateApple(1, 10, 10);
 
+	// Create apple
+	Apple apl;
+	apl.CreateApple(2, randomNumber(10, 30), randomNumber(5, 20));
+
+	// Create another thread for rendering
 	thread RenderingThread(&Game::RenderFramesAsync, g, &g.snakes[0], &apl, &score);
 	RenderingThread.detach();
 
@@ -61,9 +72,12 @@ int main(int argc, char * argv[])
 
 	while (gameplayrunning)
 	{
+		// Update timer
 		currentTime = clock();
 		delta = currentTime - lastMoveTime;
-		if (delta >= 33)
+
+		/* Read input 60 times per second */
+		if (delta >= 16)
 		{
 			int temp = ReadInput();
 			switch (temp)
@@ -75,27 +89,42 @@ int main(int argc, char * argv[])
 			case RIGHT: Direction = RIGHT; break;
 			}
 		}
+
+		/* Move snake, check collisions and handle eating apples every 300 millisecond */
 		if (delta >= 300)
 		{
+			// Move snake
 			move(&g.snakes[0], &lastDir, Direction);
+
+			// Update timer
 			lastMoveTime = clock();
 
+			// Check collisions between snake's head and borders/snake's body
 			g.CheckAllCollisions(&g.snakes[0]);
+
+			// Handle apple eating
 			if (apl.CheckCollisionBetweenAppleAndSmth(g.snakes[0].getAABB(0)))
 			{
+				// Update score
+				score++;
 				g.snakes[0].addlenght();
-				apl.CreateApple(1, randomNumber(10, 30), randomNumber(5, 20));
+				apl.CreateApple(2, randomNumber(10, 30), randomNumber(5, 20));
 				for (int i = 0; i < g.snakes[0].snakelenght(); i++)
 				{
 					if (g.snakes[0].checkCollision(apl.ReturnBox(), i))
-						apl.CreateApple(1, randomNumber(10, 30), randomNumber(5, 20));
+						apl.CreateApple(3, randomNumber(10, 30), randomNumber(5, 20));
 				}
 			}
-			score = g.snakes[0].snakelenght() - startLenght;
+
+			// Update score
+			//score = g.snakes[0].snakelenght() - startLenght;
 		}
 	}
+	// Stop rendering frames
 	keeprendering = false;
+	// Delay to stop rendering
 	SDL_Delay(500);
+	
 	g.DeleteWindowAndQuitGame();
 	cout << "YOU LOSE(or it was bug)" << endl;
 	cin.get();
