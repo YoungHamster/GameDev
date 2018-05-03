@@ -48,7 +48,7 @@ int main(int argc, char * argv[])
 
 	Game g(startLenght, Current.w, Current.h);
 
-	int score = 99;
+	int score = 0;
 	//score = g.snakes[0].snakelenght() - startLenght;
 
 	// Timer for reading input and moving snake
@@ -62,7 +62,7 @@ int main(int argc, char * argv[])
 
 	// Create apple
 	Apple apl;
-	apl.CreateApple(2, randomNumber(10, 30), randomNumber(5, 20));
+	apl.CreateApple(1, randomNumber(10, 30), randomNumber(5, 20));
 
 	// Create another thread for rendering
 	thread RenderingThread(&Game::RenderFramesAsync, g, &g.snakes[0], &apl, &score);
@@ -108,11 +108,11 @@ int main(int argc, char * argv[])
 				// Update score
 				score++;
 				g.snakes[0].addlenght();
-				apl.CreateApple(2, randomNumber(10, 30), randomNumber(5, 20));
+				apl.CreateApple(1, randomNumber(10, 30), randomNumber(5, 20));
 				for (int i = 0; i < g.snakes[0].snakelenght(); i++)
 				{
 					if (g.snakes[0].checkCollision(apl.ReturnBox(), i))
-						apl.CreateApple(3, randomNumber(10, 30), randomNumber(5, 20));
+						apl.CreateApple(2, randomNumber(10, 30), randomNumber(5, 20));
 				}
 			}
 
