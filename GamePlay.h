@@ -18,21 +18,21 @@ public:
 	//bool gameplayrunning = true;
 	PhysicalObject borders[4]; // map borders
 	Snake snakes[4]; // 4 snakes will be in multiplayeer
-	//std::vector<AABB> objects;
-	Game(int lenght, int winW, int winH)
+					 //std::vector<AABB> objects;
+	Game(int length, int winW, int winH)
 	{
 		gameplayrunning = GR.InitGameRenderer(winW, winH);
-		Snake snake;
-		snake.InitSnake(lenght);
+		//Snake snake;
+		//snake.InitSnake(length);
 		//snakes.push_back(snake); // version used with vector of snakes
-		snakes[0] = snake;
-		
+		//snakes[0] = snake;
+
 		borders[0].type = BORDER;
 		borders[0].borders.min.x = -2;
 		borders[0].borders.min.y = -2;
 		borders[0].borders.max.x = 1;
 		borders[0].borders.max.y = 29;
-		
+
 		borders[1].type = BORDER;
 		borders[1].borders.min.x = -2;
 		borders[1].borders.min.y = 26;
@@ -57,11 +57,11 @@ public:
 	void CheckAllCollisions(Snake* snake)
 	{
 		for (int i = 0; i < 4; i++)
-		{	
+		{
 			if (snakes[0].checkCollision(borders[i].borders, 0))
 				gameplayrunning = false;
 		}
-		for (int i = 1; i < snakes[0].snakelenght() - 1; i++)
+		for (int i = 1; i < snakes[0].snakelength() - 1; i++)
 		{
 			if (snakes[0].checkCollisionSnakeHeadAndBody(i))
 				gameplayrunning = false;
@@ -69,15 +69,24 @@ public:
 	}
 
 	// Renders GUI
-	void RenderGUI(int score, int lenght)
+	void RenderGUI(int score, int length)
 	{
-		GR.RenderGUI(score, lenght);
+		GR.RenderGUI(score, length);
+	}
+
+	// Renders menu
+	void RenderMenu(int page)
+	{
+		GR.RenderClear();
+		GR.RenderBackground();
+		GR.RenderMenu(page);
+		GR.RenderPresent();
 	}
 
 	// Renders one frame
 	void RenderFrame(PhysicalObject* apple)
 	{
-		GR.RenderCLear();
+		GR.RenderClear();
 		GR.RenderBackground();
 		if (apple != NULL) {
 			PhysicalObject tempApple;
@@ -92,7 +101,7 @@ public:
 		}
 
 		// Renders snake
-		for (int i = 0; i < snakes[0].snakelenght(); i++)
+		for (int i = 0; i < snakes[0].snakelength(); i++)
 		{
 			GR.RenderObject(snakes[0].getPhysicalObject(i));
 		}
@@ -113,7 +122,7 @@ public:
 			if (keeprendering) {
 				currentTime = clock();
 				delta = currentTime - lastFrameTime;
-				
+
 				// framerate == 60
 				if (delta >= 16)
 				{
@@ -128,7 +137,7 @@ public:
 	/*pointer on snake for synchronization between threads*/
 	void RenderFrameAsync(Snake* snake, PhysicalObject* apple, int score)
 	{
-		GR.RenderCLear();
+		GR.RenderClear();
 		GR.RenderBackground();
 		if (apple != NULL) {
 			PhysicalObject tempApple;
@@ -143,11 +152,11 @@ public:
 		}
 
 		// Renders snake
-		for (int i = 0; i < snake->snakelenght(); i++)
+		for (int i = 0; i < snake->snakelength(); i++)
 		{
 			GR.RenderObject(snake->getPhysicalObject(i));
 		}
-		GR.RenderGUI(score, snake->snakelenght());
+		GR.RenderGUI(score, snake->snakelength());
 		GR.RenderPresent();
 	}
 
@@ -155,5 +164,10 @@ public:
 	void DeleteWindowAndQuitGame()
 	{
 		GR.DeleteWindowAndQuitGame();
+	}
+
+	GameRenderer* returnRendererHandle()
+	{
+		return &GR;
 	}
 };

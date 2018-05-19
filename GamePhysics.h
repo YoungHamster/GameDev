@@ -1,8 +1,8 @@
 #pragma once
 
 struct XY {
-	int x;
-	int y;
+	double x;
+	double y;
 };
 
 struct AABB

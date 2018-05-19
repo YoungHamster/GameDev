@@ -19,11 +19,12 @@ class Snake
 private:
 	std::vector<SnakePart> snake;
 public:
-	int InitSnake(int lenght)
+	int InitSnake(int length)
 	{
-		if (lenght < 3) return 1;
-		if (lenght > 100) return 2;
-		for (int i = 0; i < lenght; i++)
+		snake.clear();
+		if (length < 3) return 1;
+		if (length > 100) return 2;
+		for (int i = 0; i < length; i++)
 		{
 			SnakePart block;
 			block.borders.min.x = 12 + (i + 1);
@@ -34,7 +35,7 @@ public:
 			if (i == 0) {
 				block.type = SNAKE_HEAD_LEFT;
 			}
-			else if (i == lenght - 1) {
+			else if (i == length - 1) {
 				block.type = SNAKE_TAIL_LEFT;
 			}
 			else {
@@ -122,7 +123,7 @@ public:
 		return false;
 	}
 
-	void addlenght()
+	void addlength()
 	{
 		keeprendering = false;
 		int x = snake.size() - 1;
@@ -136,7 +137,7 @@ public:
 		keeprendering = true;
 	}
 
-	int snakelenght()
+	int snakelength()
 	{
 		return snake.size();
 	}
